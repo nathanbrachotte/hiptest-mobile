@@ -2,17 +2,21 @@ import React from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
 import About from './components/About'
 import Search from './components/Search'
+import Connexion from './components/Connexion'
+import TestList from './components/TestList'
 import { TabNavigator } from 'react-navigation'
 
 const Tabs = TabNavigator({
+    Connexion: {screen : Connexion},
+    TestList: {screen: TestList},
     Search: {screen : Search},
-    About: {screen : About}
+    About: {screen : About},
     },
     {
         tabBarPosition: 'bottom',
         tabBarOptions: {
             showIcon : true,
-            showLabel: false,
+            showLabel: true,
             pressColor:"#FF0000",
             style: {
                 backgroundColor:"#000000",

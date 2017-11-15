@@ -8,7 +8,7 @@ import styles from '../Style'
 export default class Search extends React.Component {
     constructor(props) {
         super(props);
-        this.state = { text: 'Useless Placeholder' };
+        this.state = { text: 'Search here' };
     }
 
     render() {
