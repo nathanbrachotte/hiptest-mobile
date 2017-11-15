@@ -5,7 +5,8 @@ import React from 'react';
 import {Text, View, Button, TextInput } from 'react-native';
 import styles from '../Style'
 
-import TestList from './TestList'
+
+import TestList from './testList'
 
 export default class Connexion extends React.Component {
 
@@ -15,7 +16,6 @@ export default class Connexion extends React.Component {
     }
 
     search() {
-        //this.props.navigation.navigate('TestList');
         fetch('https://hiptest.net/api/auth/sign_in', {
             method: 'POST',
             headers: {
@@ -32,7 +32,9 @@ export default class Connexion extends React.Component {
                 password: 'DarknessStudents',
             })
         }).then((response) => response.json())
-            .then((responseData) => { console.log(responseData) })
+            .then((responseData) => { console.log(responseData) });
+
+        this.props.navigation.navigate('TestList');
 
     };
 

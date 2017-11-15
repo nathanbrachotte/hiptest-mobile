@@ -1,9 +1,9 @@
 import React from 'react';
 import { StyleSheet, Text, View, StatusBar } from 'react-native';
-import About from './components/About'
-import Search from './components/Search'
-import Connexion from './components/Connexion'
-import TestList from './components/TestList'
+import About from './components/about'
+import Search from './components/search'
+import Connexion from './components/connexion'
+import TestList from './components/testList'
 import { TabNavigator } from 'react-navigation'
 
 const Tabs = TabNavigator({
