@@ -6,7 +6,7 @@ import {StyleSheet} from 'react-native'
 
 export default StyleSheet.create({
     title: {
-        fontSize : 30,
+        fontSize : 50,
     },
     container: {
         flex: 1,

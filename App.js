@@ -1,19 +1,19 @@
+//React and all his friends
 import React from 'react';
-import { StyleSheet, Text, View, StatusBar } from 'react-native';
-import About from './components/about'
-import Search from './components/search'
-import Connexion from './components/connexion'
-import TestList from './components/testList'
-import { TabNavigator } from 'react-navigation'
+import {View, StatusBar } from 'react-native';
+import { TabNavigator, StackNavigator } from 'react-navigation'
 
+//Styles
+import Connection from './components/connection'
+import Authentication from "./components/authentication";
+import HomePage from "./components/homepage";
+/*
 const Tabs = TabNavigator({
-    Connexion: {screen : Connexion},
-    TestList: {screen: TestList},
-    Search: {screen : Search},
-    About: {screen : About},
+    Connection: { screen: Connection },
+    HomePage: { screen: HomePage },
     },
     {
-        tabBarPosition: 'bottom',
+        //tabBarPosition: 'bottom',
         tabBarOptions: {
             showIcon : true,
             showLabel: true,
@@ -24,15 +24,18 @@ const Tabs = TabNavigator({
                 borderColor:"#99ff15"
             }
         },
+    },
+    {
+        header: null
     });
-
+*/
 
 export default class App extends React.Component {
   render() {
     return (
         <View style={{flex:1}}>
             <StatusBar hidden = {true}/>
-            <Tabs />
+            <Connection/>
         </View>
     );
     }
