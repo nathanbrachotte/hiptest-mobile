@@ -20,13 +20,20 @@ export default class Connexion extends React.Component {
             method: 'POST',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
+                'Content-Type': 'application/json; charset=utf-8',
+                'access-token': '0hhfCEx42JraUl_I1ay-IQ',
+                'token-type': 'Bearer',
+                'client': 'DKP-HJu6xcwkAPiPZxoEpw',
+                'expiry': '1486047985',
+                'uid': 'nathan.brachotte@yahoo.fr'
             },
             body: JSON.stringify({
                 email: 'nathan.brachotte@yahoo.fr',
                 password: 'DarknessStudents',
             })
-        })
+        }).then((response) => response.json())
+            .then((responseData) => { console.log(responseData) })
+
     };
 
     render() {
