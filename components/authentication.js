@@ -29,15 +29,15 @@ class Authentication extends Component {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json; charset=utf-8',
-                'abccess-token': '0hhfCEx42JraUl_I1ay-IQ',
+                'access-token': 'ftqjCs27iy5gg-yocxO6gg',
                 'token-type': 'Bearer',
-                'client': 'DKP-HJu6xcwkAPiPZxoEpw',
-                'expiry': '1486047985',
-                'uid': 'nathan.brachotte@yahoo.fr'
+                'client': '5H0bDQTQm3FB8pEBpZkEyw',
+                'expiry': '1542450299',
+                'uid': 'sammyloudiyi@gmail.com'
             },
             body: JSON.stringify({
-                email: 'nathan.brachotte@yahoo.fr',
-                password: 'DarknessStudents',
+                email: 'sammyloudiyi@gmail.com',
+                password: '123@456b78',
             })
         })
             .then((response) => response.json())
@@ -86,3 +86,31 @@ class Authentication extends Component {
 }
 
 export default Authentication;
+
+/*    userLogin() {
+        if (!this.state.username || !this.state.password) return;
+        // dTODO: localhost doesn't work because the app is running inside an emulator. Get the IP address with ifconfig.
+        fetch('https://hiptest.net/api/auth/sign_in', {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json; charset=utf-8',
+                'abccess-token': '0hhfCEx42JraUl_I1ay-IQ',
+                'token-type': 'Bearer',
+                'client': 'DKP-HJu6xcwkAPiPZxoEpw',
+                'expiry': '1486047985',
+                'uid': 'nathan.brachotte@yahoo.fr'
+            },
+            body: JSON.stringify({
+                email: 'nathan.brachotte@yahoo.fr',
+                password: 'DarknessStudents',
+            })
+        })
+            .then((response) => response.json())
+            .then((responseData) => {
+                this.saveItem('id_token', responseData.id_token);
+                Alert.alert('Login Success!', 'Test your stuff now')
+                Actions.HomePage();
+            })
+            .done();
+    }*/
