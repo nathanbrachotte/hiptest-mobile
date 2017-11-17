@@ -13,9 +13,16 @@ class HomePage extends Component {
 
     getTests() {
         AsyncStorage.getItem('id_token').then((token) => {
-            fetch('https://hiptest.net/api/projects/63071/scenarios', {
+            fetch('https://hiptest.net/api/projects/66117/scenarios/1299054', {
                 method: 'GET',
-                headers: { 'Authorization': 'Bearer ' + token }
+                headers: { 'Authorization': 'Bearer ',
+                    'Accept': 'application/vnd.api+json; version=1',
+                    'Content-Type': 'application/json; charset=utf-8',
+                    'access-token': 'ftqjCs27iy5gg-yocxO6gg',
+                    'token-type': 'Bearer',
+                    'client': '5H0bDQTQm3FB8pEBpZkEyw',
+                    'expiry': '1542450299',
+                    'uid': 'sammyloudiyi@gmail.com'}
             })
                 .then((response) => response.text())
                 .then((quote) => {
@@ -55,3 +62,17 @@ class HomePage extends Component {
 }
 
 export default HomePage;
+
+/*getTests() {
+    AsyncStorage.getItem('id_token').then((token) => {
+        fetch('https://hiptest.net/api/projects/63071/scenarios', {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ' + token }
+        })
+            .then((response) => response.text())
+            .then((quote) => {
+                Alert.alert('Chuck Norris Quote', quote)
+            })
+            .done();
+    })
+}*/
