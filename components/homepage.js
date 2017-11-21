@@ -7,13 +7,21 @@ import styles from '../Style'
 
 class HomePage extends Component {
 
+    constructor(props) {
+        super(props);
+        this.state = {
+            id: ""
+            scenario: []
+        };
+    }
+
     static navigationOptions = {
         title: 'HomePage',
     };
 
     getTests() {
         AsyncStorage.getItem('id_token').then((token) => {
-            fetch('https://hiptest.net/api/projects/66117/scenarios/1299054', {
+            fetch('https://hiptest.net/api/projects/31812/scenarios', {
                 method: 'GET',
                 headers: { 'Authorization': 'Bearer ',
                     'Accept': 'application/vnd.api+json; version=1',
@@ -24,10 +32,15 @@ class HomePage extends Component {
                     'expiry': '1542450299',
                     'uid': 'sammyloudiyi@gmail.com'}
             })
-                .then((response) => response.text())
-                .then((quote) => {
-                    Alert.alert('Chuck Norris Quote', quote)
-                })
+                .then((response) => response.json())
+                .then(function(response){
+                    console.log(response.data.length);
+                    for (i = 0; i < response.data.length; i++)
+                    {
+                        this.setState(response.data[i].attributes.name);
+                        console.log(response.data[i].attributes.name);
+                    }
+                    })
                 .done();
         })
     }
@@ -41,6 +54,18 @@ class HomePage extends Component {
                 console.log('AsyncStorage error: ' + error.message);
             }
         }
+
+    DisplayScenario() {
+        for (i = 0; i < this.state.scenario.length; i++)
+        {
+            console.log(this.state.scenario.length);
+            return (
+                <View>
+                    <Text>{this.state.scenario}</Text>
+                </View>
+            );
+        }
+    }
 
     render() {
         return (
@@ -56,6 +81,9 @@ class HomePage extends Component {
 
                 <Button onPress={this.userLogout} title="LOG OUT" />
 
+                <View>
+                    {this.DisplayScenario()}
+                </View>
              </View>
         );
     }
