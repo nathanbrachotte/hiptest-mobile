@@ -10,8 +10,6 @@ class HomePage extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: ""
-            scenario: []
         };
     }
 
@@ -19,7 +17,7 @@ class HomePage extends Component {
         title: 'HomePage',
     };
 
-    getTests() {
+    getProject() {
         AsyncStorage.getItem('id_token').then((token) => {
             fetch('https://hiptest.net/api/projects/31812/scenarios', {
                 method: 'GET',
@@ -37,12 +35,17 @@ class HomePage extends Component {
                     console.log(response.data.length);
                     for (i = 0; i < response.data.length; i++)
                     {
-                        this.setState(response.data[i].attributes.name);
+                        //this.setState(response.data[i].attributes.name);
                         console.log(response.data[i].attributes.name);
                     }
                     })
                 .done();
         })
+    }
+    goToScenario()
+    {
+       // Actions.Scenario();
+
     }
 
     async userLogout() {
@@ -55,24 +58,12 @@ class HomePage extends Component {
             }
         }
 
-    DisplayScenario() {
-        for (i = 0; i < this.state.scenario.length; i++)
-        {
-            console.log(this.state.scenario.length);
-            return (
-                <View>
-                    <Text>{this.state.scenario}</Text>
-                </View>
-            );
-        }
-    }
-
     render() {
         return (
             <View style={styles.container}>
 
-                <TouchableOpacity style={styles.buttonWrapper} onPress={this.getTests()}>
-                    <Text style={styles.buttonText}> RECHERCHE DE TRUCS </Text>
+                <TouchableOpacity style={styles.buttonWrapper} onPress={this.getProject()}>
+                    <Text style={styles.buttonText}> CHOIX DU PROJET SUR CETTE PAGE </Text>
                 </TouchableOpacity>
 
                 <TouchableOpacity style={styles.buttonWrapper} onPress={this.userLogout}>
@@ -80,11 +71,16 @@ class HomePage extends Component {
                 </TouchableOpacity>
 
                 <Button onPress={this.userLogout} title="LOG OUT" />
+                <Text> ESPACE ESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACE
+                    ESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACE
+                    ESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACE
+                    ESPACEESPACEESPACEESPACEESPACEESPACEESPACE
+                </Text>
+                <TouchableOpacity style={styles.buttonWrapper} onPress={this.goToScenario()}>
+                    <Text style={styles.buttonText}> GO TO SCENARIO </Text>
+                </TouchableOpacity>
 
-                <View>
-                    {this.DisplayScenario()}
-                </View>
-             </View>
+            </View>
         );
     }
 }

@@ -1,12 +1,9 @@
 //React and all his friends
 import React from 'react';
 import {View, StatusBar } from 'react-native';
-import { TabNavigator, StackNavigator } from 'react-navigation'
 
 //Styles
 import Connection from './components/connection'
-import Authentication from "./components/authentication";
-import HomePage from "./components/homepage";
 /*
 const Tabs = TabNavigator({
     Connection: { screen: Connection },

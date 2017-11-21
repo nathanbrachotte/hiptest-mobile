@@ -6,10 +6,10 @@ import React from 'react';
 import {AsyncStorage, View, Button, ActivityIndicator } from 'react-native';
 import {Router, Scene} from 'react-native-router-flux';
 //Styles
-import styles from '../Style';
 //Other components
 import Authentication from './authentication';
 import HomePage from './homepage';
+import Scenario from './scenario';
 
 
 export default class Connection extends React.Component {
@@ -22,9 +22,9 @@ export default class Connection extends React.Component {
         title: 'Connection',
     };
 
-    search() {
+    /*search() {
         this.props.navigation.navigate('HomePage');
-    };
+    };*/
 
     componentWillMount() {
         AsyncStorage.getItem('id_token').then((token) => {
@@ -57,6 +57,12 @@ export default class Connection extends React.Component {
                         hideNavBar={true}
                         key='HomePage'
                         title='Home Page'
+                    />
+                    <Scene
+                        component={Scenario}
+                        hideNavBar={true}
+                        key='Scenario'
+                        title='Scenario'
                     />
                 </Scene>
             </Router>

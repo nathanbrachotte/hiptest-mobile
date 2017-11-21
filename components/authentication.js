@@ -43,7 +43,7 @@ class Authentication extends Component {
             .then((response) => response.json())
             .then((responseData) => {
                 this.saveItem('id_token', responseData.id_token);
-                Alert.alert('Login Success!', 'Test your stuff now')
+                //Alert.alert('Login Success!', 'Test your stuff now')
                 Actions.HomePage();
             })
             .done();
