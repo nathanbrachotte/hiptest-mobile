@@ -44,7 +44,7 @@ class HomePage extends Component {
     }
     goToScenario()
     {
-       // Actions.Scenario();
+       Actions.Scenario();
 
     }
 
