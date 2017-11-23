@@ -76,7 +76,7 @@ class HomePage extends Component {
                     ESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACE
                     ESPACEESPACEESPACEESPACEESPACEESPACEESPACE
                 </Text>
-                <TouchableOpacity style={styles.buttonWrapper} onPress={this.goToScenario()}>
+                <TouchableOpacity style={styles.buttonWrapper} onPress={this.goToScenario}>
                     <Text style={styles.buttonText}> GO TO SCENARIO </Text>
                 </TouchableOpacity>
 
