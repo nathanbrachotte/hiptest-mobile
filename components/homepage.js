@@ -1,6 +1,6 @@
 //React and all his friends
 import React, {Component} from 'react';
-import {Alert, Button, Text, TouchableOpacity, View, AsyncStorage, Keyboard} from 'react-native';
+import {Alert, Button, Text, TouchableOpacity, View, AsyncStorage, Keyboard, StyleSheet} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 //Styles
 import styles from '../Style'
@@ -62,40 +62,22 @@ class HomePage extends Component {
     render() {
         return (
             <View style={styles.container}>
+                <Text style={styles.title}> Choose your project </Text>
 
-                <TouchableOpacity style={styles.buttonWrapper} onPress={this.getProject()}>
-                    <Text style={styles.buttonText}> CHOIX DU PROJET SUR CETTE PAGE </Text>
-                </TouchableOpacity>
+                <View style={styles.body}>
+                    <TouchableOpacity style={styles.button} onPress={this.goToScenario}>
+                         <Text style={styles.buttonText}> GO TO SCENARIO </Text>
+                    </TouchableOpacity>
 
-                <TouchableOpacity style={styles.buttonWrapper} onPress={this.userLogout}>
-                    <Text style={styles.buttonText} > Log out </Text>
-                </TouchableOpacity>
 
-                <Button onPress={this.userLogout} title="LOG OUT" />
-                <Text>
-                    ESPACE
-                </Text>
-                <TouchableOpacity style={styles.buttonWrapper} onPress={this.goToScenario}>
-                    <Text style={styles.buttonText}> GO TO SCENARIO </Text>
-                </TouchableOpacity>
 
+                    <TouchableOpacity style={styles.button} onPress={this.userLogout}>
+                        <Text style={styles.buttonText} > Log out </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
 }
 
 export default HomePage;
-
-/*getTests() {
-    AsyncStorage.getItem('id_token').then((token) => {
-        fetch('https://hiptest.net/api/projects/63071/scenarios', {
-            method: 'GET',
-            headers: { 'Authorization': 'Bearer ' + token }
-        })
-            .then((response) => response.text())
-            .then((quote) => {
-                Alert.alert('Chuck Norris Quote', quote)
-            })
-            .done();
-    })
-}*/

@@ -52,7 +52,7 @@ class Authentication extends Component {
     render() {
         return (
             <View style={styles.container}>
-                    <Text style={styles.title}> HipTest Mobile </Text>
+                <Text style={styles.title}> HipTest Mobile </Text>
                 <View style={styles.body}>
                     <TextInput
                         editable={true}

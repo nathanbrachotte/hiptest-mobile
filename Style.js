@@ -9,14 +9,14 @@ export default StyleSheet.create({
         fontSize : 50,
         backgroundColor: '#282828',
         textAlign:'center',
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        marginBottom:5,
     },
     container: {
     },
     body:{
-//        flex: 1,
         backgroundColor: '#FFFFFF',
- //       flexDirection: 'column',
+        flexDirection: 'column',
         justifyContent: 'space-around',
 
     },
@@ -25,13 +25,21 @@ export default StyleSheet.create({
         borderWidth: 1,
         padding: 15,
         borderColor: '#FD6963',
-
+        marginBottom:5,
     },
     buttonText:{
         textAlign:'center',
-
+    },
+    buttonMargin:{
+        marginBottom:5,
     },
     inputText:{
         height: 40,
+    },
+    boutonWrapper:{
+        flex: 1,
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        marginBottom: 50,
     },
 })

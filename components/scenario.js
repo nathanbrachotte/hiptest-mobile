@@ -1,6 +1,8 @@
 //React and all his friends
 import React, {Component} from 'react';
 import {Alert, Button, Text, TouchableOpacity, View, AsyncStorage, ActivityIndicator, ListView } from 'react-native';
+import {Actions} from 'react-native-router-flux';
+
 //Styles
 import styles from '../Style'
 
@@ -46,6 +48,12 @@ class Scenario extends Component {
             });
     };
 
+    goToHomePage()
+    {
+        Actions.HomePage();
+
+    }
+
     scenNumberNext(){
         if(this.state.num === 0){
             this.setState({isLoading: false,num: this.state.nbElement});
@@ -70,11 +78,22 @@ class Scenario extends Component {
         }
 
         return (
-            <View style={{flex: 1, paddingTop: 20}}>
+            <View style={styles.container}>
+                <Text style={styles.title}> {this.state.dataSource.getRowData(0, this.state.num).attributes.name} </Text>
+                <View style={styles.body}>
+                    <View style={styles.boutonWrapper}>
+                        <TouchableOpacity style={styles.button} onPress={() => this.scenNumberPrev()}>
+                            <Text style={styles.buttonText}> Previous </Text>
+                        </TouchableOpacity>
 
-                    <Text>{this.state.dataSource.getRowData(0, this.state.num).attributes.name}</Text>
-                <Button onPress={() => this.scenNumberNext()} title="NEXT" />
-                <Button onPress={() => this.scenNumberPrev()} title="PREV" />
+                        <TouchableOpacity style={styles.button} onPress={() => this.scenNumberNext()}>
+                            <Text style={styles.buttonText}> Next </Text>
+                        </TouchableOpacity>
+                    </View>
+                    <TouchableOpacity style={styles.button} onPress={() => this.goToHomePage()}>
+                        <Text style={styles.buttonText}> Return </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
         );
     }
