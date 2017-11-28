@@ -77,8 +77,6 @@ class Scenario extends Component {
                 <Button onPress={() => this.scenNumberPrev()} title="PREV" />
             </View>
         );
-
-
     }
 }
 export default Scenario;

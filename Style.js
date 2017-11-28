@@ -7,14 +7,22 @@ import {StyleSheet} from 'react-native'
 export default StyleSheet.create({
     title: {
         fontSize : 50,
+        backgroundColor: '#FF000F',
+        alignContent:'center'
     },
     container: {
-        flex: 1,
+    },
+    body:{
+//        flex: 1,
         backgroundColor: '#FFFFFF',
-        //alignItems: 'center',
-        //justifyContent: 'center',
+ //       flexDirection: 'column',
+        justifyContent: 'space-around',
+
     },
     button:{
         backgroundColor:'#ff0e00'
-    }
+    },
+    inputText:{
+        height: 40,
+    },
 })

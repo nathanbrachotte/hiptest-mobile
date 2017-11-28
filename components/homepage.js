@@ -71,10 +71,8 @@ class HomePage extends Component {
                 </TouchableOpacity>
 
                 <Button onPress={this.userLogout} title="LOG OUT" />
-                <Text> ESPACE ESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACE
-                    ESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACE
-                    ESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACEESPACE
-                    ESPACEESPACEESPACEESPACEESPACEESPACEESPACE
+                <Text>
+                    ESPACE
                 </Text>
                 <TouchableOpacity style={styles.buttonWrapper} onPress={this.goToScenario}>
                     <Text style={styles.buttonText}> GO TO SCENARIO </Text>

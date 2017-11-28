@@ -6,6 +6,7 @@ import React from 'react';
 import {AsyncStorage, View, Button, ActivityIndicator } from 'react-native';
 import {Router, Scene} from 'react-native-router-flux';
 //Styles
+import styles from '../Style'
 //Other components
 import Authentication from './authentication';
 import HomePage from './homepage';
