@@ -7,8 +7,9 @@ import {StyleSheet} from 'react-native'
 export default StyleSheet.create({
     title: {
         fontSize : 50,
-        backgroundColor: '#FF000F',
-        alignContent:'center'
+        backgroundColor: '#282828',
+        textAlign:'center',
+        color: '#FFFFFF'
     },
     container: {
     },
@@ -20,7 +21,15 @@ export default StyleSheet.create({
 
     },
     button:{
-        backgroundColor:'#ff0e00'
+        backgroundColor:'#FD6963',
+        borderWidth: 1,
+        padding: 15,
+        borderColor: '#FD6963',
+
+    },
+    buttonText:{
+        textAlign:'center',
+
     },
     inputText:{
         height: 40,

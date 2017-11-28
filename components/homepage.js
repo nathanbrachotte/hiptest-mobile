@@ -1,6 +1,6 @@
 //React and all his friends
 import React, {Component} from 'react';
-import {Alert, Button, Text, TouchableOpacity, View, AsyncStorage} from 'react-native';
+import {Alert, Button, Text, TouchableOpacity, View, AsyncStorage, Keyboard} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 //Styles
 import styles from '../Style'
@@ -9,6 +9,7 @@ class HomePage extends Component {
 
     constructor(props) {
         super(props);
+        Keyboard.dismiss();
         this.state = {
         };
     }

@@ -1,6 +1,6 @@
 //React and all his friends
 import React, {Component} from 'react';
-import {AsyncStorage, Text, TextInput, TouchableOpacity, View, Alert, Button} from 'react-native';
+import {AsyncStorage, Text, TextInput, TouchableOpacity, View, Alert} from 'react-native';
 import {Actions} from 'react-native-router-flux';
 
 import styles from '../Style';
@@ -52,7 +52,7 @@ class Authentication extends Component {
     render() {
         return (
             <View style={styles.container}>
-                    <Text style={styles.title}> Welcome </Text>
+                    <Text style={styles.title}> HipTest Mobile </Text>
                 <View style={styles.body}>
                     <TextInput
                         editable={true}
@@ -73,8 +73,10 @@ class Authentication extends Component {
                         style={styles.inputText}
                         value={this.state.password}
                     />
-                    <Button onPress={this.userLogin.bind(this)} title="Log In" />
 
+                    <TouchableOpacity style={styles.button} onPress={this.userLogin.bind(this)}>
+                        <Text style={styles.buttonText}> Log In </Text>
+                    </TouchableOpacity>
                 </View>
             </View>
         );
