@@ -2,7 +2,7 @@
 import React, {Component} from 'react';
 import {Alert, Button, Text, TouchableOpacity, View, AsyncStorage, ActivityIndicator, ListView } from 'react-native';
 import {Actions} from 'react-native-router-flux';
-
+import _ from 'lodash';
 //Styles
 import styles from '../Style'
 
@@ -140,9 +140,28 @@ class Scenario extends Component {
                     this.setState({
                         listSteps: ds2.cloneWithRows(this.state.listScenario.getRowData(0, 0).attributes["definition-json"].steps)
                     });
-                    console.log(this.state.listSteps._dataBlob.s1);
 
-                    // do something with new state
+                    //TRY 1
+                    //this.state.listSteps.map((step) => {
+                    //       console.log(step.action);
+                   //});
+
+                    //TRY 2
+                    //_.each(this.state.listSteps, function(userObject) { console.log(userObject.s1); });
+
+
+                    //TRY 3
+                    //console.log(this.state.listSteps["_dataBlob"].s1);
+                    /*this.setState({
+                        listSteps2: ds2.cloneWithRows(this.state.listSteps["_dataBlob"].s1)
+                    });
+                    */
+
+                    //console.log(this.state.listSteps2.getRowData(0,0).action);
+                    /*for (let step of this.state.listSteps)
+                    {
+                        console.log(step);
+                    }*/
                 });
             })
             .catch((error) => {
