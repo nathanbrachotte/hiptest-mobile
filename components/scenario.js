@@ -1,6 +1,6 @@
 //React and all his friends
 import React, {Component} from 'react';
-import {Alert, Button, Text, TouchableOpacity, View, AsyncStorage, ActivityIndicator, ListView } from 'react-native';
+import {Alert, Button, Text, TouchableOpacity, View, AsyncStorage, ActivityIndicator, ListView, FlatList } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import _ from 'lodash';
 //Styles
@@ -12,6 +12,7 @@ class Scenario extends Component {
         super(props);
         this.state = {
             isLoading: true,
+            ScenarioChosen: 0,
         };
     }
 
@@ -20,7 +21,7 @@ class Scenario extends Component {
     };
 
     componentDidMount() {
-        return fetch('https://hiptest.net/api/projects/31812/scenarios', {
+        fetch('https://hiptest.net/api/projects/31812/scenarios', {
             method: 'GET',
                 headers: { 'Authorization': 'Bearer ',
             'Accept': 'application/vnd.api+json; version=1',
@@ -38,10 +39,50 @@ class Scenario extends Component {
                     isLoading: false,
                     dataSource: ds.cloneWithRows(responseJson.data),
                     nbElement:  (responseJson.data.length - 1),
-                    num: (responseJson.data.length - 1),
                 }, function() {
                     //console.log(this.state.dataSource.getRowData(0, 0));
                     // do something with new state
+                });
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+
+        fetch('https://hiptest.net/api/projects/31812/test_runs/44718/test_snapshots', {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ',
+                'Accept': 'application/vnd.api+json; version=1',
+                'Content-Type': 'application/json; charset=utf-8',
+                'access-token': 'ftqjCs27iy5gg-yocxO6gg',
+                'token-type': 'Bearer',
+                'client': '5H0bDQTQm3FB8pEBpZkEyw',
+                'expiry': '1542450299',
+                'uid': 'sammyloudiyi@gmail.com'}
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                //console.log(responseJson.data);
+
+                let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+                this.setState({
+                    listScenario: ds1.cloneWithRows(responseJson.data),
+                    steps: ds1.cloneWithRows(this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['steps']),
+            }, function() {
+                    //console.log(this.state.steps);
+
+                    //GET SCENARIO NAME
+                    //console.log(this.state.listScenario.getRowData(0,0)['attributes']['definition-json']['scenario_name']);
+                    //GET FIRST STEP OF THE FIRST SCENARIO
+                    /*
+                    let te = this.state.listScenario.getRowData(0,0)['attributes']['definition-json']['steps'];
+                    te.forEach((step, index) => {
+                        if (step['action']) {
+                            console.log('do something with this action named: ', step['action']);
+                        } else {
+                            console.log('do something with this result named: ', step['result']);
+                        }
+                    });*/
+
                 });
             })
             .catch((error) => {
@@ -56,17 +97,19 @@ class Scenario extends Component {
     };
 
     scenNumberNext(){
-        if(this.state.num === 0){
-            this.setState({isLoading: false,num: this.state.nbElement});
+        if(this.state.ScenarioChosen === 0){
+            this.setState({isLoading: false,ScenarioChosen: this.state.nbElement});
+            //this.state.steps = this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['steps'];
+
         }else{
-            this.setState({isLoading: false,num: this.state.num-1});
+            this.setState({isLoading: false,ScenarioChosen: this.state.ScenarioChosen-1});
         }
     };
     scenNumberPrev(){
-        if(this.state.num === this.state.nbElement){
-            this.setState({isLoading: false,num: 0});
+        if(this.state.ScenarioChosen === this.state.nbElement){
+            this.setState({isLoading: false,ScenarioChosen: 0});
         }else{
-            this.setState({isLoading: false,num: this.state.num+1});
+            this.setState({isLoading: false,ScenarioChosen: this.state.ScenarioChosen+1});
         }
     };
 
@@ -106,7 +149,7 @@ class Scenario extends Component {
         })
             .then((response) => response.json())
             .then((responseJson) => {
-                let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+                //let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
                 console.log(responseJson.data);
             })
             .catch((error) => {
@@ -114,62 +157,48 @@ class Scenario extends Component {
             });
     };
 
-    getStepsOfATests(){
-        fetch('https://hiptest.net/api/projects/31812/test_runs/44718/test_snapshots', {
-            method: 'GET',
-            headers: { 'Authorization': 'Bearer ',
-                'Accept': 'application/vnd.api+json; version=1',
-                'Content-Type': 'application/json; charset=utf-8',
-                'access-token': 'ftqjCs27iy5gg-yocxO6gg',
-                'token-type': 'Bearer',
-                'client': '5H0bDQTQm3FB8pEBpZkEyw',
-                'expiry': '1542450299',
-                'uid': 'sammyloudiyi@gmail.com'}
-        })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                //console.log(responseJson.data);
+test(){
+    fetch('https://hiptest.net/api/projects/31812/test_runs/44718/test_snapshots', {
+        method: 'GET',
+        headers: { 'Authorization': 'Bearer ',
+            'Accept': 'application/vnd.api+json; version=1',
+            'Content-Type': 'application/json; charset=utf-8',
+            'access-token': 'ftqjCs27iy5gg-yocxO6gg',
+            'token-type': 'Bearer',
+            'client': '5H0bDQTQm3FB8pEBpZkEyw',
+            'expiry': '1542450299',
+            'uid': 'sammyloudiyi@gmail.com'}
+    })
+        .then((response) => response.json())
+        .then((responseJson) => {
+            //console.log(responseJson.data);
 
-                let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-                let ds2 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-                this.setState({
-                    listScenario: ds.cloneWithRows(responseJson.data),
+            let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+            this.setState({
+                listScenario: ds1.cloneWithRows(responseJson.data),
+                steps: ds1.cloneWithRows(this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['steps']),
+            }, function() {
+                //console.log(this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['scenario_name']);
+                //console.log(this.state.steps);
 
-                }, function() {
-                    //console.log(this.state.listScenario.getRowData(0, 0).attributes["definition-json"].steps);
-                    this.setState({
-                        listSteps: ds2.cloneWithRows(this.state.listScenario.getRowData(0, 0).attributes["definition-json"].steps)
-                    });
-
-                    //TRY 1
-                    //this.state.listSteps.map((step) => {
-                    //       console.log(step.action);
-                   //});
-
-                    //TRY 2
-                    //_.each(this.state.listSteps, function(userObject) { console.log(userObject.s1); });
-
-
-                    //TRY 3
-                    //console.log(this.state.listSteps["_dataBlob"].s1);
-                    /*this.setState({
-                        listSteps2: ds2.cloneWithRows(this.state.listSteps["_dataBlob"].s1)
-                    });
-                    */
-
-                    //console.log(this.state.listSteps2.getRowData(0,0).action);
-                    /*for (let step of this.state.listSteps)
-                    {
-                        console.log(step);
-                    }*/
+                //GET SCENARIO NAME
+                //console.log(this.state.listScenario.getRowData(0,0)['attributes']['definition-json']['scenario_name']);
+                //GET FIRST STEP OF THE FIRST SCENARIO
+                let te = this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['steps'];
+                te.forEach((step, index) => {
+                    if (step['action']) {
+                        console.log('do something with this action named: ', step['action']);
+                    } else {
+                        console.log('do something with this result named: ', step['result']);
+                    }
                 });
-            })
-            .catch((error) => {
-                console.error(error);
+
             });
-    };
-
-
+        })
+        .catch((error) => {
+            console.error(error);
+        });
+}
 
     render() {
         if (this.state.isLoading) {
@@ -179,10 +208,13 @@ class Scenario extends Component {
                 </View>
             );
         }
-
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return (
             <View style={styles.container}>
-                <Text style={styles.title}> {this.state.dataSource.getRowData(0, this.state.num).attributes.name} </Text>
+                <Text style={styles.title}> {this.state.dataSource.getRowData(0, this.state.ScenarioChosen).attributes.name} </Text>
+                <Text style={styles.title}> {this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['scenario_name']} </Text>
+
+
                 <View style={styles.body}>
                     <View style={styles.boutonWrapper}>
                         <TouchableOpacity style={styles.button} onPress={() => this.scenNumberPrev()}>
@@ -202,13 +234,25 @@ class Scenario extends Component {
                     <TouchableOpacity style={styles.button} onPress={() => this.getTestOfTestsRun()}>
                         <Text style={styles.buttonText}> Get Tests in TestRun </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => this.getStepsOfATests()}>
+                    <TouchableOpacity style={styles.button} onPress={() => this.test()}>
                         <Text style={styles.buttonText}> Get Steps in Tests </Text>
                     </TouchableOpacity>
+
+                    <FlatList
+                        data={this.state.steps}
+                        renderItem={({item}) => <Text>{item.key}</Text>}
+                    />
+
                 </View>
+
 
             </View>
         );
     }
 }
 export default Scenario;
+
+/*
+<Text style={styles.title}> {this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['scenario_name']} </Text>
+
+ */
