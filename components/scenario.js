@@ -13,6 +13,7 @@ class Scenario extends Component {
         this.state = {
             isLoading: true,
             ScenarioChosen: 0,
+            resultatLoad: "unknown"
         };
     }
 
@@ -110,7 +111,10 @@ class Scenario extends Component {
         })
             .then((response) => response.json())
             .then((responseJson) => {
-                //let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+                let ds2 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+                this.setState({
+                   result: ds2.cloneWithRows(responseJson.data),
+                })
                 console.log(responseJson.data);
             })
             .catch((error) => {
@@ -175,8 +179,13 @@ test(){
            }
 
     }
-
-
+    renderResult(){
+        this.getTestOfTestsRun();
+        console.log(this.state.result.getRowData(0,0).attributes.status);
+        this.setState({
+            resultatLoad: this.state.result.getRowData(0, 0).attributes.status,
+        });
+    }
 
     render() {
         if (this.state.isLoading) {
@@ -189,8 +198,8 @@ test(){
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return (
             <View style={styles.container}>
-                <Text style={styles.title}> {this.state.dataSource.getRowData(0, this.state.ScenarioChosen).attributes.name} </Text>
-
+                <Text style={styles.title}> {this.state.dataSource.getRowData(0, this.state.ScenarioChosen).attributes.name}</Text>
+                <Text>{this.state.resultatLoad}</Text>
                 <View style={styles.body}>
                     <View style={styles.boutonWrapper}>
                         <TouchableOpacity style={styles.button} onPress={() => this.scenNumberPrev()}>
@@ -210,7 +219,9 @@ test(){
                     <TouchableOpacity style={styles.button} onPress={() => this.getTestOfTestsRun()}>
                         <Text style={styles.buttonText}> Get Tests in TestRun </Text>
                     </TouchableOpacity>
-
+                    <TouchableOpacity style={styles.button} onPress={() => this.renderResult()}>
+                        <Text style={styles.buttonText}> Get result of test run </Text>
+                    </TouchableOpacity>
                     <FlatList
                         data={this.state.steps}
                         renderItem={({item}) => this.renderSteps(item)}
