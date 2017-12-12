@@ -13,6 +13,7 @@ class Scenario extends Component {
         this.state = {
             isLoading: true,
             ScenarioChosen: 0,
+            resultatLoad: "unknown"
         };
     }
 
@@ -221,6 +222,7 @@ test(){
                 </View>
             );
         }
+        const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return (
             <View style={styles.container}>
                 <Text style={styles.title}> {this.state.listScenario.getRowData(0, this.state.ScenarioChosen).attributes.name} </Text>
