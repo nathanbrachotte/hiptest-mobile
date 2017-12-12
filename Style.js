@@ -23,7 +23,7 @@ export default StyleSheet.create({
     button:{
         backgroundColor:'#FD6963',
         borderWidth: 1,
-        padding: 15,
+        padding: 1,
         borderColor: '#FD6963',
         marginBottom:5,
     },
@@ -40,6 +40,16 @@ export default StyleSheet.create({
         flex: 1,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginBottom: 50,
+        marginBottom: 10,
     },
+    statusUndefined:{
+        color : '#525350',
+    },
+    statusPassed:{
+        color : '#3aff35',
+    },
+    statusFailed:{
+        color : '#770d0d',
+    },
+
 })
