@@ -2,6 +2,7 @@
 import React, {Component} from 'react';
 import {Alert, Button, Text, TouchableOpacity, View, AsyncStorage, ActivityIndicator, ListView, FlatList } from 'react-native';
 import {Actions} from 'react-native-router-flux';
+import InvertibleScrollView from 'react-native-invertible-scroll-view';
 import _ from 'lodash';
 //Styles
 import styles from '../Style'
@@ -68,7 +69,7 @@ class Scenario extends Component {
             .then((response) => response.json())
             .then((responseJson) => {
                 let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-                console.log(responseJson.data);
+                //console.log(responseJson.data);
             })
             .catch((error) => {
                 console.error(error);
@@ -89,31 +90,59 @@ test(){
     })
         .then((response) => response.json())
         .then((responseJson) => {
-            console.log(responseJson.data);
+            //console.log(responseJson.data);
 
             let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
             this.setState({
                 listScenario: ds1.cloneWithRows(responseJson.data),
-                isLoading: false,
                 nbElement:  (responseJson.data.length - 1),
                 //steps: ds1.cloneWithRows(responseJson.data).getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['steps'],
             }, function() {
                 //console.log(this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['scenario_name']);
-                console.log("step : " + this.state.steps);
-
+             //   console.log("step : " + this.state.steps);
+                console.log(this.state.listScenario)
                 //GET SCENARIO NAME
                 //console.log(this.state.listScenario.getRowData(0,0)['attributes']['definition-json']['scenario_name']);
                 //GET FIRST STEP OF THE FIRST SCENARIO
                 let te = this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['steps'];
                 let idSnapShot = this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['id'];
-                //console.log(id);
                 this.stepsResult(te,idSnapShot);
+                this.scenarioDescription(idSnapShot);
             });
         })
         .catch((error) => {
             console.error(error);
         });
 }
+
+    scenarioDescription(idSnapShot){
+        fetch('https://hiptest.net/api/projects/31812/test_runs/44718/test_snapshots/'+idSnapShot+'?include=scenario', {
+            method: 'GET',
+            headers: { 'Authorization': 'Bearer ',
+                'Accept': 'application/vnd.api+json; version=1',
+                'Content-Type': 'application/json; charset=utf-8',
+                'access-token': 'ftqjCs27iy5gg-yocxO6gg',
+                'token-type': 'Bearer',
+                'client': '5H0bDQTQm3FB8pEBpZkEyw',
+                'expiry': '1542450299',
+                'uid': 'sammyloudiyi@gmail.com'}
+        })
+            .then((response) => response.json())
+            .then((responseJson) => {
+                // console.log(responseJson);
+                let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+                descRes = ds1.cloneWithRows(responseJson.included).getRowData(0,0)['attributes']['description'];
+              //  console.log(responseJson.data)
+                this.setState({
+                    descScenario: descRes,
+                    isLoading: false,
+                })
+                 console.log(this.state.descScenario);
+            })
+            .catch((error) => {
+                console.error(error);
+            });
+    }
 
     stepsResult(steps,idSnapShot){
         fetch('https://hiptest.net/api/projects/31812/test_runs/44718/test_snapshots/'+idSnapShot+'?include=last-result', {
@@ -129,10 +158,11 @@ test(){
         })
             .then((response) => response.json())
             .then((responseJson) => {
-               // console.log(responseJson);
+                console.log(responseJson);
 
                let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
                stepsRes = ds1.cloneWithRows(responseJson.included).getRowData(0,0)['attributes']['step-statuses'];
+               resScen = ds1.cloneWithRows(responseJson.included).getRowData(0,0)['attributes']['status'];
               // console.log(stepsRes);
                 var stepsArray = [];
                 var stepsCount = stepsRes.length;
@@ -160,9 +190,10 @@ test(){
                     }
 
                 });
-               // console.log(stepsArray);
+                console.log(stepsArray);
                 this.setState({
-                    steps : stepsArray
+                    steps : stepsArray,
+                    scenRes: resScen,
                 })
 
             })
@@ -213,7 +244,26 @@ test(){
 
     }
 
+    /*renderRes(res) {
+            console.log(res);
+            switch (res){
+                case "undefined" :
+                    return <View><Text style={styles.statusUndefined}>{res}</Text>
+                    </View>
+                    break;
 
+                case "passed":
+                    return <View><Text style={styles.statusPassed}>{res}</Text>
+                    </View>
+                    break;
+
+                case "failed":
+                    return <View><Text style={styles.statusFailed}>{res}</Text>
+                    </View>
+                    break;
+            }
+
+        }*/
     render() {
         if (this.state.isLoading) {
             return (
@@ -225,8 +275,8 @@ test(){
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return (
             <View style={styles.container}>
-                <Text style={styles.title}> {this.state.listScenario.getRowData(0, this.state.ScenarioChosen).attributes.name} </Text>
-
+                <Text style={styles.title}> {this.state.listScenario.getRowData(0, this.state.ScenarioChosen)['attributes']['name']}-{"\n"}{this.state.scenRes}</Text>
+                <Text style={styles.body}>{this.state.descScenario}</Text>
                 <View style={styles.body}>
                     <View style={styles.boutonWrapper}>
                         <TouchableOpacity style={styles.button} onPress={() => this.scenNumberPrev()}>
@@ -250,9 +300,8 @@ test(){
                     />
 
                 </View>
-
-
             </View>
+
         );
     }
 }
@@ -262,3 +311,4 @@ export default Scenario;
 <Text style={styles.title}> {this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['scenario_name']} </Text>
 
  */
+//    <Text style={styles.body}>{this.state.descScenario.getRowData(0, this.state.ScenarioChosen).attributes.definition}</Text>
