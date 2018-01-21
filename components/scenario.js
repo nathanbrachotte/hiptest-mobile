@@ -1,9 +1,8 @@
 //React and all his friends
 import React, {Component} from 'react';
-import {Alert, Button, Text, TouchableOpacity, View, AsyncStorage, ActivityIndicator, ListView, FlatList } from 'react-native';
+import {Alert, Button, Text, TouchableOpacity, View, ActivityIndicator, ListView, FlatList } from 'react-native';
 import {Actions} from 'react-native-router-flux';
-import InvertibleScrollView from 'react-native-invertible-scroll-view';
-import _ from 'lodash';
+import ApiResponse from './apiResponse';
 //Styles
 import styles from '../Style'
 
@@ -18,12 +17,7 @@ class Scenario extends Component {
         };
     }
 
-    static navigationOptions = {
-        title: 'Scenario',
-    };
-
     componentDidMount() {
-
 
         this.test()
     };
@@ -31,7 +25,6 @@ class Scenario extends Component {
     goToHomePage()
     {
         Actions.HomePage();
-
     };
 
     scenNumberNext(){
@@ -54,90 +47,38 @@ class Scenario extends Component {
         }
     };
 
-    getTestsRun(){
-        fetch('https://hiptest.net/api/projects/31812/test_runs', {
-            method: 'GET',
-            headers: { 'Authorization': 'Bearer ',
-                'Accept': 'application/vnd.api+json; version=1',
-                'Content-Type': 'application/json; charset=utf-8',
-                'access-token': 'ftqjCs27iy5gg-yocxO6gg',
-                'token-type': 'Bearer',
-                'client': '5H0bDQTQm3FB8pEBpZkEyw',
-                'expiry': '1542450299',
-                'uid': 'sammyloudiyi@gmail.com'}
-        })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                let ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-                //console.log(responseJson.data);
-            })
-            .catch((error) => {
-                console.error(error);
-            });
-    };
 
-test(){
-    fetch('https://hiptest.net/api/projects/31812/test_runs/44718/test_snapshots', {
-        method: 'GET',
-        headers: { 'Authorization': 'Bearer ',
-            'Accept': 'application/vnd.api+json; version=1',
-            'Content-Type': 'application/json; charset=utf-8',
-            'access-token': 'ftqjCs27iy5gg-yocxO6gg',
-            'token-type': 'Bearer',
-            'client': '5H0bDQTQm3FB8pEBpZkEyw',
-            'expiry': '1542450299',
-            'uid': 'sammyloudiyi@gmail.com'}
-    })
-        .then((response) => response.json())
-        .then((responseJson) => {
-            //console.log(responseJson.data);
 
-            let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-            this.setState({
-                listScenario: ds1.cloneWithRows(responseJson.data),
-                nbElement:  (responseJson.data.length - 1),
-                //steps: ds1.cloneWithRows(responseJson.data).getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['steps'],
-            }, function() {
-                //console.log(this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['scenario_name']);
-             //   console.log("step : " + this.state.steps);
-                console.log(this.state.listScenario)
-                //GET SCENARIO NAME
-                //console.log(this.state.listScenario.getRowData(0,0)['attributes']['definition-json']['scenario_name']);
-                //GET FIRST STEP OF THE FIRST SCENARIO
-                let te = this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['steps'];
-                let idSnapShot = this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['id'];
-                this.stepsResult(te,idSnapShot);
-                this.scenarioDescription(idSnapShot);
-            });
-        })
-        .catch((error) => {
-            console.error(error);
+test() {
+    var api = new ApiResponse();
+    var testSnapshotsPromise = api.getTestSnapshot();
+
+    testSnapshotsPromise.then((testSnapshots) => {
+        console.log(testSnapshots);
+        let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        this.setState({
+            listScenario: ds1.cloneWithRows(testSnapshots.data),
+            nbElement: (testSnapshots.data.length - 1),
+        }, function () {
+            let te = this.state.listScenario.getRowData(0, this.state.ScenarioChosen)['attributes']['definition-json']['steps'];
+            let idSnapShot = this.state.listScenario.getRowData(0, this.state.ScenarioChosen)['id'];
+            this.stepsResult(te, idSnapShot);
+            this.scenarioDescription(idSnapShot);
         });
+    })
 }
 
+
     scenarioDescription(idSnapShot){
-        fetch('https://hiptest.net/api/projects/31812/test_runs/44718/test_snapshots/'+idSnapShot+'?include=scenario', {
-            method: 'GET',
-            headers: { 'Authorization': 'Bearer ',
-                'Accept': 'application/vnd.api+json; version=1',
-                'Content-Type': 'application/json; charset=utf-8',
-                'access-token': 'ftqjCs27iy5gg-yocxO6gg',
-                'token-type': 'Bearer',
-                'client': '5H0bDQTQm3FB8pEBpZkEyw',
-                'expiry': '1542450299',
-                'uid': 'sammyloudiyi@gmail.com'}
-        })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                // console.log(responseJson);
+        var api = new ApiResponse();
+        var scenarioDescriptionPromise = api.getScenarioDescription(idSnapShot);
+        scenarioDescriptionPromise.then((scenarioDescription) => {
                 let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-                descRes = ds1.cloneWithRows(responseJson.included).getRowData(0,0)['attributes']['description'];
-              //  console.log(responseJson.data)
+                descRes = ds1.cloneWithRows(scenarioDescription.included).getRowData(0,0)['attributes']['description'];
                 this.setState({
                     descScenario: descRes,
                     isLoading: false,
                 })
-                 console.log(this.state.descScenario);
             })
             .catch((error) => {
                 console.error(error);
@@ -145,24 +86,14 @@ test(){
     }
 
     stepsResult(steps,idSnapShot){
-        fetch('https://hiptest.net/api/projects/31812/test_runs/44718/test_snapshots/'+idSnapShot+'?include=last-result', {
-            method: 'GET',
-            headers: { 'Authorization': 'Bearer ',
-                'Accept': 'application/vnd.api+json; version=1',
-                'Content-Type': 'application/json; charset=utf-8',
-                'access-token': 'ftqjCs27iy5gg-yocxO6gg',
-                'token-type': 'Bearer',
-                'client': '5H0bDQTQm3FB8pEBpZkEyw',
-                'expiry': '1542450299',
-                'uid': 'sammyloudiyi@gmail.com'}
-        })
-            .then((response) => response.json())
-            .then((responseJson) => {
-                console.log(responseJson);
+        var api = new ApiResponse();
+        var stepsResultPromise = api.getStepsResult(idSnapShot);
+
+        stepsResultPromise.then((stepsResult) => {
 
                let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
-               stepsRes = ds1.cloneWithRows(responseJson.included).getRowData(0,0)['attributes']['step-statuses'];
-               resScen = ds1.cloneWithRows(responseJson.included).getRowData(0,0)['attributes']['status'];
+               stepsRes = ds1.cloneWithRows(stepsResult.included).getRowData(0,0)['attributes']['step-statuses'];
+               resScen = ds1.cloneWithRows(stepsResult.included).getRowData(0,0)['attributes']['status'];
               // console.log(stepsRes);
                 var stepsArray = [];
                 var stepsCount = stepsRes.length;
@@ -195,7 +126,6 @@ test(){
                     steps : stepsArray,
                     scenRes: resScen,
                 })
-
             })
             .catch((error) => {
                 console.error(error);
@@ -290,9 +220,6 @@ test(){
                     <TouchableOpacity style={styles.button} onPress={() => this.goToHomePage()}>
                         <Text style={styles.buttonText}> Return </Text>
                     </TouchableOpacity>
-                    <TouchableOpacity style={styles.button} onPress={() => this.getTestsRun()}>
-                        <Text style={styles.buttonText}> GetTestRuns </Text>
-                    </TouchableOpacity>
 
                     <FlatList
                         data={this.state.steps}
@@ -306,9 +233,3 @@ test(){
     }
 }
 export default Scenario;
-
-/*
-<Text style={styles.title}> {this.state.listScenario.getRowData(0,this.state.ScenarioChosen)['attributes']['definition-json']['scenario_name']} </Text>
-
- */
-//    <Text style={styles.body}>{this.state.descScenario.getRowData(0, this.state.ScenarioChosen).attributes.definition}</Text>

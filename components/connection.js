@@ -49,13 +49,14 @@ export default class Connection extends React.Component {
                     <Scene
                         component={Authentication}
                         hideNavBar={true}
-                        initial={true}
+
                         key='Authentication'
                         title='Authentication'
                     />
                     <Scene
                         component={HomePage}
                         hideNavBar={true}
+                        initial={true}
                         key='HomePage'
                         title='Home Page'
                     />
