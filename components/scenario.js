@@ -5,6 +5,7 @@ import {Actions} from 'react-native-router-flux';
 import ApiResponse from './apiResponse';
 //Styles
 import styles from '../Style'
+import GestureRecognizer, {swipeDirections} from 'react-native-swipe-gestures';
 
 class Scenario extends Component {
 
@@ -13,7 +14,9 @@ class Scenario extends Component {
         this.state = {
             isLoading: true,
             ScenarioChosen: 0,
-            resultatLoad: "unknown"
+            resultatLoad: "unknown",
+            myText: 'I\'m ready to get swiped!',
+            gestureName: 'none',
         };
     }
 
@@ -26,7 +29,15 @@ class Scenario extends Component {
     {
         Actions.HomePage();
     };
+    onSwipeLeft(gestureState) {
+        this.setState({myText: 'You swiped left!'});
+        this.scenNumberPrev();
+    }
 
+    onSwipeRight(gestureState) {
+        this.setState({myText: 'You swiped right!'});
+       this.scenNumberNext();
+    }
     scenNumberNext(){
         if(this.state.ScenarioChosen === 0){
             this.setState({isLoading: false,ScenarioChosen: this.state.nbElement});
@@ -94,10 +105,8 @@ test() {
                let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
                stepsRes = ds1.cloneWithRows(stepsResult.included).getRowData(0,0)['attributes']['step-statuses'];
                resScen = ds1.cloneWithRows(stepsResult.included).getRowData(0,0)['attributes']['status'];
-              // console.log(stepsRes);
                 var stepsArray = [];
                 var stepsCount = stepsRes.length;
-               // console.log("nbSteps : " + stepsCount);
                 steps.forEach((step, index) => {
                     if (step['action']) {
                         console.log('do something with this action named: ', step['action']);
@@ -121,7 +130,6 @@ test() {
                     }
 
                 });
-                console.log(stepsArray);
                 this.setState({
                     steps : stepsArray,
                     scenRes: resScen,
@@ -202,13 +210,17 @@ test() {
                 </View>
             );
         }
+        const config = {
+            velocityThreshold: 0.3,
+            directionalOffsetThreshold: 80
+        };
+
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return (
             <View style={styles.container}>
-                <Text style={styles.title}> {this.state.listScenario.getRowData(0, this.state.ScenarioChosen)['attributes']['name']}-{"\n"}{this.state.scenRes}</Text>
-                <Text style={styles.body}>{this.state.descScenario}</Text>
+
                 <View style={styles.body}>
-                    <View style={styles.boutonWrapper}>
+                    {/* <View style={styles.boutonWrapper}>
                         <TouchableOpacity style={styles.button} onPress={() => this.scenNumberPrev()}>
                             <Text style={styles.buttonText}> Previous </Text>
                         </TouchableOpacity>
@@ -216,15 +228,29 @@ test() {
                         <TouchableOpacity style={styles.button} onPress={() => this.scenNumberNext()}>
                             <Text style={styles.buttonText}> Next </Text>
                         </TouchableOpacity>
-                    </View>
-                    <TouchableOpacity style={styles.button} onPress={() => this.goToHomePage()}>
-                        <Text style={styles.buttonText}> Return </Text>
-                    </TouchableOpacity>
+                    </View>*/}
+                    <GestureRecognizer
+                        onSwipeLeft={(state) => this.onSwipeLeft(state)}
+                        onSwipeRight={(state) => this.onSwipeRight(state)}
+                        config={config}
+                        style={{
 
-                    <FlatList
-                        data={this.state.steps}
-                        renderItem={({item}) => this.renderSteps(item)}
-                    />
+                            backgroundColor: this.state.backgroundColor
+                        }}
+                        >
+                        <Text style={styles.title}> {this.state.listScenario.getRowData(0, this.state.ScenarioChosen)['attributes']['name']}-{"\n"}{this.state.scenRes}</Text>
+                        <Text style={styles.body}>{this.state.descScenario}</Text>
+                        <FlatList
+                            data={this.state.steps}
+                            renderItem={({item}) => this.renderSteps(item)}
+                        />
+                        <TouchableOpacity style={styles.button} onPress={() => this.goToHomePage()}>
+                            <Text style={styles.buttonText}> Return </Text>
+                        </TouchableOpacity>
+                    </GestureRecognizer>
+
+
+
 
                 </View>
             </View>
