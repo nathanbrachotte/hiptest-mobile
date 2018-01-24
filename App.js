@@ -4,31 +4,12 @@ import {View, StatusBar } from 'react-native';
 
 //Styles
 import Connection from './components/connection'
-/*
-const Tabs = TabNavigator({
-    Connection: { screen: Connection },
-    HomePage: { screen: HomePage },
-    },
-    {
-        //tabBarPosition: 'bottom',
-        tabBarOptions: {
-            showIcon : true,
-            showLabel: true,
-            pressColor:"#FF0000",
-            style: {
-                backgroundColor:"#000000",
-                borderTopWidth:1,
-                borderColor:"#99ff15"
-            }
-        },
-    },
-    {
-        header: null
-    });
-*/
+
 
 export default class App extends React.Component {
+
   render() {
+      console.disableYellowBox = true;
     return (
         <View style={{flex:1}}>
             <StatusBar hidden = {true}/>

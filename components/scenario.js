@@ -1,6 +1,6 @@
 //React and all his friends
 import React, {Component} from 'react';
-import {Alert, Button, Text, TouchableOpacity, View, ActivityIndicator, ListView, FlatList } from 'react-native';
+import {Image, Text, TouchableOpacity, View, ActivityIndicator, ListView, FlatList } from 'react-native';
 import {Actions} from 'react-native-router-flux';
 import ApiResponse from './apiResponse';
 //Styles
@@ -15,8 +15,6 @@ class Scenario extends Component {
             isLoading: true,
             ScenarioChosen: 0,
             resultatLoad: "unknown",
-            myText: 'I\'m ready to get swiped!',
-            gestureName: 'none',
         };
     }
 
@@ -30,12 +28,10 @@ class Scenario extends Component {
         Actions.HomePage();
     };
     onSwipeLeft(gestureState) {
-        this.setState({myText: 'You swiped left!'});
         this.scenNumberPrev();
     }
 
     onSwipeRight(gestureState) {
-        this.setState({myText: 'You swiped right!'});
        this.scenNumberNext();
     }
     scenNumberNext(){
@@ -65,13 +61,14 @@ test() {
     var testSnapshotsPromise = api.getTestSnapshot();
 
     testSnapshotsPromise.then((testSnapshots) => {
-        console.log(testSnapshots);
+
         let ds1 = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         this.setState({
             listScenario: ds1.cloneWithRows(testSnapshots.data),
             nbElement: (testSnapshots.data.length - 1),
         }, function () {
             let te = this.state.listScenario.getRowData(0, this.state.ScenarioChosen)['attributes']['definition-json']['steps'];
+
             let idSnapShot = this.state.listScenario.getRowData(0, this.state.ScenarioChosen)['id'];
             this.stepsResult(te, idSnapShot);
             this.scenarioDescription(idSnapShot);
@@ -107,28 +104,31 @@ test() {
                resScen = ds1.cloneWithRows(stepsResult.included).getRowData(0,0)['attributes']['status'];
                 var stepsArray = [];
                 var stepsCount = stepsRes.length;
+                var indice = 1;
                 steps.forEach((step, index) => {
                     if (step['action']) {
-                        console.log('do something with this action named: ', step['action']);
                         if(index >= stepsCount){
-                            stepsArray.push({action : step['action'],status : "undefined"});
+                            stepsArray.push({action : step['action'],status : "undefined",indice: indice});
+                            indice++;
                         }
                         else
                         {
-                            stepsArray.push({result : step['action'],status : stepsRes[index]});
+                            stepsArray.push({action : step['action'],status : stepsRes[index],indice: indice});
+                            indice++;
                         }
 
                     } else {
-                        console.log('do something with this result named: ', step['result']);
+
                         if(index >= stepsCount){
-                            stepsArray.push({action : step['result'],status : "undefined"});
+                            stepsArray.push({result : step['result'],status : "undefined",indice: indice});
+                            indice++;
                         }
                         else
                         {
-                            stepsArray.push({result : step['result'],status : stepsRes[index]});
+                            stepsArray.push({result : step['result'],status : stepsRes[index],indice: indice});
+                            indice++;
                         }
                     }
-
                 });
                 this.setState({
                     steps : stepsArray,
@@ -144,17 +144,47 @@ test() {
            if(item.action){
                switch (item.status){
                    case "undefined" :
-                       return <View><Text>{item.action}</Text><Text style={styles.statusUndefined}>{item.status}</Text>
+                       return <View style={{flex:1,flexDirection:"row"}}>
+                           <View style={styles.indiceSteps}>
+                               <Text>{item.indice}</Text>
+                           </View>
+                           <View style={styles.nomSteps}>
+                               <Image style={{width:20,height:20}} source={require('../icone/icons8-support-50.png')}/>
+                               <Text style={{flex:1}}>{item.action}</Text>
+                           </View>
+                           <View style={styles.resultSteps}>
+                           <Image style={{width:30,height:30}} source={require('../icone/icons8-aide-50.png')}/>
+                           </View>
                        </View>
                    break;
 
                    case "passed":
-                       return <View><Text>{item.action}</Text><Text style={styles.statusPassed}>{item.status}</Text>
+                       return <View style={{flex:1,flexDirection:"row"}}>
+                           <View style={styles.indiceSteps}>
+                               <Text>{item.indice}</Text>
+                           </View>
+                           <View style={styles.nomSteps}>
+                               <Image style={{width:20,height:20}} source={require('../icone/icons8-support-50.png')}/>
+                               <Text style={{flex:1}}>{item.action}</Text>
+                           </View>
+                           <View style={styles.resultSteps}>
+                               <Image style={{width:30,height:30}} source={require('../icone/icons8-ok-50.png')}/>
+                           </View>
                        </View>
                    break;
 
                    case "failed":
-                       return <View><Text>{item.action}</Text><Text style={styles.statusFailed}>{item.status}</Text>
+                       return <View style={{flex:1,flexDirection:"row"}}>
+                           <View style={styles.indiceSteps}>
+                               <Text>{item.indice}</Text>
+                           </View>
+                           <View style={styles.nomSteps}>
+                               <Image style={{width:20,height:20}} source={require('../icone/icons8-support-50.png')}/>
+                               <Text style={{flex:1}}>{item.action}</Text>
+                           </View>
+                           <View style={styles.resultSteps}>
+                               <Image style={{width:30,height:30}} source={require('../icone/icons8-annuler-50.png')}/>
+                           </View>
                        </View>
                    break;
                }
@@ -164,44 +194,86 @@ test() {
            {
                switch (item.status){
                    case "undefined" :
-                       return <View><Text>{item.result}</Text><Text style={styles.statusUndefined}>{item.status}</Text>
+                       return <View style={{flex:1,flexDirection:"row"}}>
+                           <View style={styles.indiceSteps}>
+                               <Text>{item.indice}</Text>
+                           </View>
+                           <View style={styles.nomSteps}>
+                               <Image style={{width:20,height:20}} source={require('../icone/icons8-eye-50.png')}/>
+                               <Text style={{flex:1, marginLeft:25}}>{item.result}</Text>
+                           </View>
+                           <View style={styles.resultSteps}>
+                               <Image style={{width:30,height:30}} source={require('../icone/icons8-aide-50.png')}/>
+                           </View>
                        </View>
                        break;
 
                    case "passed":
-                       return <View><Text>{item.result}</Text><Text style={styles.statusPassed}>{item.status}</Text>
+                       return <View style={{flex:1,flexDirection:"row"}}>
+                           <View style={styles.indiceSteps}>
+                               <Text>{item.indice}</Text>
+                           </View>
+                           <View style={styles.nomSteps}>
+                               <Image style={{width:20,height:20}} source={require('../icone/icons8-eye-50.png')}/>
+                               <Text style={{flex:1, marginLeft:25}}>{item.result}</Text>
+                           </View>
+                           <View style={styles.resultSteps}>
+                               <Image style={{width:30,height:30}} source={require('../icone/icons8-ok-50.png')}/>
+                           </View>
                        </View>
                        break;
 
                    case "failed":
-                       return <View><Text>{item.result}</Text><Text style={styles.statusFailed}>{item.status}</Text>
+                       return <View style={{flex:1,flexDirection:"row"}}>
+                           <View style={styles.indiceSteps}>
+                               <Text>{item.indice}</Text>
+                           </View>
+                           <View style={styles.nomSteps}>
+                               <Image style={{width:20,height:20}} source={require('../icone/icons8-eye-50.png')}/>
+                               <Text style={{flex:1, marginLeft:25}}>{item.result}</Text>
+                           </View>
+                           <View style={styles.resultSteps}>
+                               <Image style={{width:30,height:30}} source={require('../icone/icons8-annuler-50.png')}/>
+                           </View>
                        </View>
                        break;
                }
            }
-
     }
 
-    /*renderRes(res) {
-            console.log(res);
+    renderRes(res) {
+
             switch (res){
                 case "undefined" :
-                    return <View><Text style={styles.statusUndefined}>{res}</Text>
-                    </View>
+                    return <View><Image source={require('../icone/icons8-aide-50.png')}/></View>
                     break;
 
                 case "passed":
-                    return <View><Text style={styles.statusPassed}>{res}</Text>
+                    return <View><Image source={require('../icone/icons8-ok-50.png')}/>
                     </View>
                     break;
 
                 case "failed":
-                    return <View><Text style={styles.statusFailed}>{res}</Text>
+                    return <View><Image source={require('../icone/icons8-annuler-50.png')}/>
                     </View>
                     break;
             }
 
-        }*/
+        }
+
+    renderSeparator = () => {
+        return (
+            <View
+                style={{
+                    height: 1,
+                    width: "86%",
+                    backgroundColor: "#CED0CE",
+                    marginLeft: "14%"
+                }}
+            />
+        );
+    };
+
     render() {
         if (this.state.isLoading) {
             return (
@@ -217,42 +289,62 @@ test() {
 
         const ds = new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
         return (
-            <View style={styles.container}>
-
-                <View style={styles.body}>
-                    {/* <View style={styles.boutonWrapper}>
-                        <TouchableOpacity style={styles.button} onPress={() => this.scenNumberPrev()}>
-                            <Text style={styles.buttonText}> Previous </Text>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity style={styles.button} onPress={() => this.scenNumberNext()}>
-                            <Text style={styles.buttonText}> Next </Text>
-                        </TouchableOpacity>
-                    </View>*/}
+            <View style={{flex : 1}}>
                     <GestureRecognizer
                         onSwipeLeft={(state) => this.onSwipeLeft(state)}
                         onSwipeRight={(state) => this.onSwipeRight(state)}
                         config={config}
                         style={{
-
-                            backgroundColor: this.state.backgroundColor
+                            flex:1,
+                            flexDirection:"column",
                         }}
                         >
-                        <Text style={styles.title}> {this.state.listScenario.getRowData(0, this.state.ScenarioChosen)['attributes']['name']}-{"\n"}{this.state.scenRes}</Text>
-                        <Text style={styles.body}>{this.state.descScenario}</Text>
+                        <View style={styles.headerScenario}>
+
+                            <Text style={{fontSize:20}}> Test running : {"\n" + this.state.listScenario.getRowData(0, this.state.ScenarioChosen)['attributes']['name']}</Text>
+                            {this.renderRes(this.state.scenRes)}
+                        </View>
+                        <View style={styles.bodyScenario}>
                         <FlatList
                             data={this.state.steps}
                             renderItem={({item}) => this.renderSteps(item)}
+                            ItemSeparatorComponent = {this.renderSeparator}
                         />
+                        </View>
+                        <View style={styles.infoScenario}>
+                            <View style={{flex:1,flexDirection:"column"}}>
+                                <View style={styles.titreInfo}>
+                                    <Text>Attach</Text>
+                                </View>
+                                <View style={styles.contenuInfo}>
+                                    <Text>Attachment here</Text>
+                                </View>
+                            </View>
+                            <View style={{flex:1,flexDirection:"column"}}>
+                                <View style={styles.titreInfo}>
+                                    <Text>Comment</Text>
+                                </View>
+                                <View style={styles.contenuInfo}>
+                                    <Text>{this.state.descScenario}</Text>
+                                </View>
+                            </View>
+                        </View>
+                        <View style={styles.footerScenario}>
+
                         <TouchableOpacity style={styles.button} onPress={() => this.goToHomePage()}>
-                            <Text style={styles.buttonText}> Return </Text>
+                            <View style={styles.buttonView}>
+                            <Image style={{width:20,height:20}} source={require('../icone/icons8-pause-50.png')}/>
+                            <Text style={styles.buttonText}> Pause execution </Text>
+                            </View>
                         </TouchableOpacity>
+                            <TouchableOpacity style={styles.button} onPress={() => this.goToHomePage()}>
+                                <View style={styles.buttonView}>
+                                    <Image style={{width:20,height:20}} source={require('../icone/icons8-fin-50.png')}/>
+                                    <Text style={styles.buttonText}> Close execution </Text>
+                                </View>
+                            </TouchableOpacity>
+                        </View>
                     </GestureRecognizer>
-
-
-
-
-                </View>
             </View>
 
         );

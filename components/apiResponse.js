@@ -37,7 +37,6 @@ class ApiResponse{
                      'uid': 'sammyloudiyi@gmail.com'}
              });
              let responseJson = await response.json();
-             // console.log(responseJson);
              return responseJson;
          }
          catch (error){
