@@ -1,0 +1,28 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>QUnit basic example</title>
+    <link rel="stylesheet" href="qunit.css">
+</head>
+<body>
+<div id="qunit"></div>
+<div id="qunit-fixture"></div>
+<script src="qunit.js"></script>
+<script src="../apiResponse.js"></script>
+<script>
+    QUnit.test( "a basic test example", function( assert ) {
+        var value = "hello";
+        assert.equal( value, "hello", "We expect value to be hello" );
+    });
+   QUnit.test("Test requête getTestSnapshot", function ( assert ) {
+        var value = "Buy many books";
+        var api = new apiResponse();
+        var scen = api.getTestSnapshot();
+        let scenList =  new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2});
+        listScen : scenList.cloneWithRows(scen.data);
+        assert.equal(value, listScen.getRowData(0, 0)['attributes']['name'], "Est-ce que ça a marché ?");
+    })
+</script>
+</body>
